@@ -11,7 +11,6 @@ Each file chunk is embedded in the payload of a standard ping packet — no TCP,
 - [Features](#features)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
-- [How It Works](#how-it-works)
 - [Usage](#usage)
   - [transfer](#transfer)
   - [generate](#generate)
@@ -114,30 +113,15 @@ sha256sum secret.txt
 
 ---
 
-## How It Works
-
-```
-Sender                                                              Receiver
-┌──────────────────────┐                                   ┌────────────────────────┐
-│                      │       ICMP Echo Request           │                        │
-│  File ──► Chunks     │  ┌─────────────────────────────►  │  tshark ──► capture    │
-│                      │  │  3-byte index + 12-byte data   │                        │
-│  chunk[0] = 00 00 00 │  │                                │  sort -u ──► decode    │
-│  chunk[1] = 00 00 01 │  │  (ping -p <hex_payload>)       │                        │
-│  chunk[2] = 00 00 02 │  │                                │  xxd -r -p ──► File    │
-│  ...                 │  │                                │                        │
-└──────────────────────┘  │                                └────────────────────────┘
-                          │
-                     Each ping carries 15 bytes:
-                     3 bytes chunk index (big-endian)
-                     + up to 12 bytes of file data
-```
-
-The tool splits the file into 12-byte chunks, prepends a 3-byte big-endian index to each, and sends them as the payload of ICMP echo requests using `ping -p`. The receiver captures all echo requests with `tshark`, sorts and deduplicates them, strips the index bytes, and reconstructs the original file.
-
----
-
 ## Usage
+
+The tool is organized into three subcommands, each suited for a different scenario:
+
+| Command | Description |
+|---|---|
+| `transfer` | Send a file directly from the current machine using `ping` |
+| `generate` | Create a base64-encoded oneliner to paste on a remote shell |
+| `makefile` | Generate a standalone script file to transfer and execute on the target |
 
 ### `transfer`
 
