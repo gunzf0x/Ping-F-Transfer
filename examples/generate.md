@@ -10,6 +10,17 @@ The `generate` subcommand creates a **base64-encoded oneliner** that you paste i
 
 > **Tip:** Always use **absolute paths** with `-f` and quote them. The path is embedded in the payload.
 
+## Table of Contents
+
+- [Python](#python)
+- [PowerShell](#powershell)
+- [Bash](#bash)
+- [Perl](#perl)
+- [Ruby](#ruby)
+- [PHP](#php)
+- [Node.js](#nodejs)
+- [Combining flags — quick reference](#combining-flags--quick-reference)
+
 ---
 
 ## Python

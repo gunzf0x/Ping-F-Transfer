@@ -10,6 +10,19 @@ The `makefile` subcommand generates a **standalone script file** that can be tra
 
 > **Tip:** Always use **absolute paths** with `-f` and quote them. The path is embedded in the generated file.
 
+## Table of Contents
+
+- [Python](#python)
+- [PowerShell](#powershell)
+- [Bash](#bash)
+- [Perl](#perl)
+- [Ruby](#ruby)
+- [PHP](#php)
+- [Node.js](#nodejs)
+- [Go](#go)
+- [C](#c)
+- [All flags combined](#all-flags-combined)
+
 ---
 
 ## Python

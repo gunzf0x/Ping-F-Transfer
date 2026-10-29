@@ -8,6 +8,22 @@ The `transfer` subcommand sends a file directly from the current machine using `
 > sudo tshark -i <interface> -l -Y 'icmp.type==8 && ip.src==<sender-ip>' -T fields -e data.data > capture.hex
 > ```
 
+## Table of Contents
+
+- [Basic transfer](#basic-transfer)
+- [With a fixed delay between pings](#with-a-fixed-delay-between-pings)
+- [With random delay](#with-random-delay-harder-to-detect-by-timing-analysis)
+- [With compression](#with-compression)
+- [With encryption](#with-encryption)
+- [With compression + encryption](#with-compression--encryption)
+- [With junk packets](#with-junk-packets)
+- [With randomized junk packets](#with-randomized-junk-packets)
+- [Full stealth mode](#full-stealth-mode)
+- [Estimate transfer time](#estimate-transfer-time-dry-run)
+- [Suppress the banner](#suppress-the-banner)
+- [Custom filenames in decode instructions](#custom-filenames-in-decode-instructions)
+- [All flags combined](#all-flags-combined)
+
 ---
 
 ## Basic transfer
