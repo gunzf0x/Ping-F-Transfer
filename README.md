@@ -254,6 +254,54 @@ Compare the hash with the one printed by the sender.
 
 Go and C are only available with `makefile` because they produce source code that must be compiled. Use `--create-script-for {linux,macos,windows}` to get the correct build instructions.
 
+### Build requirements for compiled languages
+
+<details>
+<summary><b>Go</b></summary>
+
+Just the Go compiler:
+
+```bash
+# Debian / Ubuntu / Kali
+sudo apt install golang
+
+# Arch
+sudo pacman -S go
+```
+
+Go produces statically linked binaries by default — no extra flags needed.
+
+</details>
+
+<details>
+<summary><b>C</b></summary>
+
+| Target OS | Required packages (on a Debian/Ubuntu/Kali build machine) |
+|---|---|
+| Linux | `gcc` (usually pre-installed) |
+| macOS | Xcode Command Line Tools (`xcode-select --install`) on macOS itself |
+| Windows | `gcc-mingw-w64-x86-64` (cross-compiler) |
+
+```bash
+# Debian / Ubuntu / Kali — install everything at once
+sudo apt install gcc gcc-mingw-w64-x86-64
+```
+
+If using `--compress`, the zlib development library is also needed:
+
+| Target OS | Additional package |
+|---|---|
+| Linux | `zlib1g-dev` (usually pre-installed) |
+| Windows (cross-compile) | `libz-mingw-w64-dev` |
+
+```bash
+sudo apt install zlib1g-dev libz-mingw-w64-dev
+```
+
+Linux builds use `-static` so the resulting binary is self-contained and can run on machines without shared libraries installed.
+
+</details>
+
 ---
 
 ## Flags Reference
@@ -362,10 +410,3 @@ cd Ping-F-Transfer
 python3 ping-f-transfer.py --help
 ```
 
----
-
-## Uninstall
-
-```bash
-pipx uninstall ping-f-transfer
-```
