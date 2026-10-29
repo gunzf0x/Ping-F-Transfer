@@ -89,14 +89,13 @@ Replace `ping-f-transfer` with `python3 ping-f-transfer.py` in all examples belo
 
 ## Quick Start
 
-The following workflow shows a practical usage for this tool.
-
 ### Step 1: Capture ICMP packets
 In the machine we want to save the file, execute:
 ```bash
 # Capture ICMP packets
 sudo tshark -i tun0 -l -Y 'icmp.type==8 && ip.src==10.10.10.50' -T fields -e data.data > capture.hex
 ```
+Where `10.10.10.50` is the IP of the machine containing the file we want to transfer and `tun0` is the network interface name that allow connections to that target machine.
 
 ### Step 2: Transfer file using 'ping' with 'ping-f-transfer'
 In the machine we want to save the file (same as previous step, but another terminal) we use `generate` command (recommended). This generates a oneliner command that can be later executed in the machine we want to transfer
