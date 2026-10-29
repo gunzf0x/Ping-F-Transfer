@@ -1,0 +1,18 @@
+OtherBackups/
+ScriptsWorking*/
+fileTest/
+test.py
+*.log
+*.pcapng
+*.txt
+__pycache__/
+*.pyc
+pingtransfer_working1.py
+Backup_Status.md
+Notes.md
+# Generated output files from makefile command
+generated_ping_f_transfer.*
+# Egg/dist artifacts (future pipx packaging)
+*.egg-info/
+dist/
+build/
