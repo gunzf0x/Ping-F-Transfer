@@ -23,7 +23,7 @@ Each file chunk is embedded in the payload of a standard ping packet — no TCP,
   - [generate-only Flags](#generate-only-flags)
   - [makefile-only Flags](#makefile-only-flags)
 - [Examples](#examples)
-- [Standalone Branch](#standalone-branch)
+- [Python Standalone Branch](#python-standalone-branch)
 
 ---
 
@@ -400,12 +400,12 @@ This outputs numbered chunks you can paste one at a time, followed by the comman
 
 ---
 
-## Standalone Branch
+## Python Standalone Branch
 
-A standalone version of the tool (single `ping-f-transfer.py` file + `utils/` directory, no installation required) is preserved in the [`standalone`](https://github.com/gunzf0x/Ping-F-Transfer/tree/standalone) branch:
+A standalone version of the tool (single `ping-f-transfer.py` file + `utils/` directory, no installation required) is preserved in the [`python-standalone`](https://github.com/gunzf0x/Ping-F-Transfer/tree/python-standalone) branch:
 
 ```bash
-git clone -b standalone https://github.com/gunzf0x/Ping-F-Transfer
+git clone -b python-standalone https://github.com/gunzf0x/Ping-F-Transfer
 cd Ping-F-Transfer
 python3 ping-f-transfer.py --help
 ```
